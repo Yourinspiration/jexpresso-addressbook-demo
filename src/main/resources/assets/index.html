@@ -1,0 +1,187 @@
+<html data-ng-app="app">
+<head>
+<link rel="stylesheet"
+	href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+</head>
+<body data-ng-controller="Controller">
+	<div class="container">
+		<div class="page-header">
+			<h1>
+				Address Book Application <small>a demo app for <a
+					href="https://github.com/Yourinspiration/jexpresso">JExpresso</a></small>
+			</h1>
+		</div>
+
+		<div class="jumbotron">
+			<p>This is a simple demo application how to use the JExpresso web framework</p>
+			<p>The data will be deleted every 10 minutes.</p>
+		</div>
+
+		<button class="btn btn-primary" data-toggle="modal"
+			data-ng-click="newAddress()">Create Address</button>
+
+		<br /> <br />
+
+		<table class="table">
+			<thead>
+				<tr>
+					<th><a href=""
+						data-ng-click="predicate = 'firstName'; reverse=false">First
+							Name</a></th>
+					<th><a href=""
+						data-ng-click="predicate = 'middleName'; reverse=false">Middle
+							Name</a></th>
+					<th><a href=""
+						data-ng-click="predicate = 'lastName'; reverse=false">Last
+							Name</a></th>
+					<th><a href=""
+						data-ng-click="predicate = 'country'; reverse=false">Country</a></th>
+					<th><a href=""
+						data-ng-click="predicate = 'city'; reverse=false">City</a></th>
+					<th><a href=""
+						data-ng-click="predicate = 'zip'; reverse=false">Zip</a></th>
+					<th><a href=""
+						data-ng-click="predicate = 'street'; reverse=false">Street</a></th>
+				</tr>
+			</thead>
+			<tr data-ng-repeat="address in addresses | orderBy:predicate:reverse">
+				<td>{{address.firstName}}</td>
+				<td>{{address.middleName}}</td>
+				<td>{{address.lastName}}</td>
+				<td>{{address.country}}</td>
+				<td>{{address.city}}</td>
+				<td>{{address.zip}}</td>
+				<td>{{address.street}}</td>
+				<td><div class="pull-right">
+						<button type="button" class="btn btn-default"
+							data-ng-click="editAddress(address.id)">
+							<span class="glyphicon glyphicon-pencil"></span>
+						</button>
+						&nbsp;
+						<button type="button" class="btn btn-danger"
+							data-ng-click="deleteAddress(address.id)">
+							<span class="glyphicon glyphicon-remove"></span>
+						</button>
+					</div></td>
+			</tr>
+		</table>
+	</div>
+
+	<div class="modal fade" id="addressModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+					</button>
+					<h4 class="modal-title">Create/Edit Address</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal" role="form"
+						data-ng-submit="saveAddress()">
+						<div class="form-group">
+							<div class="col-sm-12">
+								<input type="text" class="form-control" placeholder="First Name"
+									data-ng-model="currentAddress.firstName">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-12">
+								<input type="text" class="form-control"
+									placeholder="Middle Name"
+									data-ng-model="currentAddress.middleName">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-12">
+								<input type="text" class="form-control" placeholder="Last Name"
+									data-ng-model="currentAddress.lastName">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-12">
+								<input type="text" class="form-control" placeholder="Country"
+									data-ng-model="currentAddress.country">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-12">
+								<input type="text" class="form-control" placeholder="City"
+									data-ng-model="currentAddress.city">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-12">
+								<input type="text" class="form-control" placeholder="Zip"
+									data-ng-model="currentAddress.zip">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-12">
+								<input type="text" class="form-control" placeholder="Street"
+									data-ng-model="currentAddress.street">
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-offset-2 col-sm-10">
+								<div class="pull-right">
+									<button type="submit" class="btn btn-success">Save</button>
+								</div>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script
+		src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script
+		src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+	<script
+		src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular.min.js"></script>
+	<script>
+		var app = angular.module('app', []);
+
+		app.controller('Controller', function($scope, $http) {
+			$scope.currentAddress = {};
+
+			$http.get('/address').then(function(result) {
+				$scope.addresses = result.data;
+			});
+			
+			$scope.newAddress = function() {
+				$scope.currentAddress = {};
+				$('#addressModal').modal('show');
+			}
+
+			$scope.saveAddress = function() {
+				$http.post('/address', $scope.currentAddress).then(
+						function(result) {
+							$http.get('/address').then(function(result) {
+								$scope.addresses = result.data;
+							});
+							$scope.currentAddress = {};
+							$('#addressModal').modal('hide');
+						});
+			}
+			
+			$scope.editAddress = function(id) {
+				$http.get('/address/' + id).then(function(result) {
+					$scope.currentAddress = result.data;
+					$('#addressModal').modal('show');
+				});
+			}
+			
+			$scope.deleteAddress = function(id) {
+				$http.delete('/address/' + id).then(function(result) {
+					$http.get('/address').then(function(result) {
+						$scope.addresses = result.data;
+					});
+				});
+			}
+		});
+	</script>
+</body>
+</html>
