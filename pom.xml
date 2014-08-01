@@ -13,6 +13,13 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
+	<repositories>
+		<repository>
+			<id>nexus.yourinspiration.de</id>
+			<url>http://nexus.yourinspiration.de/nexus/content/repositories/releases/</url>
+		</repository>
+	</repositories>
+
 	<dependencies>
 		<dependency>
 			<groupId>de.yourinspiration</groupId>
