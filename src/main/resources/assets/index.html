@@ -1,7 +1,6 @@
-<html data-ng-app="app">
+<html data-ng-app="AddressBook">
 <head>
-<link rel="stylesheet"
-	href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/bootstrap.min.css">
 </head>
 <body data-ng-controller="Controller">
 	<div class="container">
@@ -13,7 +12,8 @@
 		</div>
 
 		<div class="jumbotron">
-			<p>This is a simple demo application how to use the JExpresso web framework</p>
+			<p>This is a simple demo application how to use the JExpresso web
+				framework</p>
 			<p>The data will be deleted every 10 minutes.</p>
 		</div>
 
@@ -54,12 +54,12 @@
 				<td>{{address.street}}</td>
 				<td><div class="pull-right">
 						<button type="button" class="btn btn-default"
-							data-ng-click="editAddress(address.id)">
+							data-ng-click="editAddress(address)">
 							<span class="glyphicon glyphicon-pencil"></span>
 						</button>
 						&nbsp;
 						<button type="button" class="btn btn-danger"
-							data-ng-click="deleteAddress(address.id)">
+							data-ng-click="deleteAddress(address)">
 							<span class="glyphicon glyphicon-remove"></span>
 						</button>
 					</div></td>
@@ -135,53 +135,10 @@
 		</div>
 	</div>
 
-	<script
-		src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-	<script
-		src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-	<script
-		src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.18/angular.min.js"></script>
-	<script>
-		var app = angular.module('app', []);
-
-		app.controller('Controller', function($scope, $http) {
-			$scope.currentAddress = {};
-
-			$http.get('/address').then(function(result) {
-				$scope.addresses = result.data;
-			});
-			
-			$scope.newAddress = function() {
-				$scope.currentAddress = {};
-				$('#addressModal').modal('show');
-			}
-
-			$scope.saveAddress = function() {
-				$http.post('/address', $scope.currentAddress).then(
-						function(result) {
-							$http.get('/address').then(function(result) {
-								$scope.addresses = result.data;
-							});
-							$scope.currentAddress = {};
-							$('#addressModal').modal('hide');
-						});
-			}
-			
-			$scope.editAddress = function(id) {
-				$http.get('/address/' + id).then(function(result) {
-					$scope.currentAddress = result.data;
-					$('#addressModal').modal('show');
-				});
-			}
-			
-			$scope.deleteAddress = function(id) {
-				$http.delete('/address/' + id).then(function(result) {
-					$http.get('/address').then(function(result) {
-						$scope.addresses = result.data;
-					});
-				});
-			}
-		});
-	</script>
+	<script src="/js/lib/jquery.min.js"></script>
+	<script src="/js/lib/bootstrap.min.js"></script>
+	<script src="/js/lib/angular.min.js"></script>
+	<script src="/js/lib/angular-resource.min.js"></script>
+	<script src="/js/app.js"></script>
 </body>
 </html>
