@@ -3,6 +3,12 @@ package de.yourinspiration.jexpresso.addressbook;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+/**
+ * Address data model.
+ * 
+ * @author Marcel Härle
+ *
+ */
 @Document(collection = "addresses")
 public class Address {
 

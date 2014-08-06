@@ -12,6 +12,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 import com.mongodb.MongoClient;
 
+import de.yourinspiration.jexpresso.JExpresso;
+
 @Configuration
 @EnableScheduling
 @EnableMongoRepositories(basePackageClasses = SpringConfig.class)
@@ -25,6 +27,11 @@ public class SpringConfig {
         final String username = System.getenv("MONGO_USERNAME") != null ? System.getenv("MONGO_USERNAME") : "";
         final String password = System.getenv("MONGO_PASSWORD") != null ? System.getenv("MONGO_PASSWORD") : "";
         return new MongoTemplate(new MongoClient(host), database, new UserCredentials(username, password));
+    }
+
+    @Bean
+    public JExpresso jexpresso() {
+        return new JExpresso();
     }
 
 }
